@@ -1,17 +1,15 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
-import 'package:firebase_core/firebase_core.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:maternityhelperap/screen/components/common/custom_form_button.dart';
 import 'package:maternityhelperap/screen/components/common/custom_input_field.dart';
 import 'package:maternityhelperap/screen/components/common/page_header.dart';
-import 'package:maternityhelperap/screen/components/forget_password_page.dart';
-import 'package:maternityhelperap/screen/components/signup_page.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:maternityhelperap/screen/components/common/page_heading.dart';
-import 'package:maternityhelperap/screen/components/common/custom_form_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:maternityhelperap/screen/components/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,27 +22,28 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  
+
   Future signInWithGoogle() async {
-  // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  if(googleUser == null){
-    return ;
+    if (googleUser == null) {
+      return;
+    }
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
-
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-  // Create a new credential
-  final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(credential);
-}
 
   Future<void> login() async {
     try {
@@ -95,14 +94,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 child: SingleChildScrollView(
-                 padding: const EdgeInsets.all(50.0),
+                  padding: const EdgeInsets.all(50.0),
                   child: Form(
                     key: _loginFormKey,
                     child: Column(
                       children: [
                         const PageHeading(title: 'Login'),
                         CustomInputField(
-                          Controller: _emailController,
+                          controller: _emailController,
                           labelText: 'Email',
                           hintText: 'Your email id',
                           validator: (textValue) {
@@ -117,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 16),
                         CustomInputField(
-                          Controller: _passwordController,
+                          controller: _passwordController,
                           labelText: 'Password',
                           hintText: 'Your password',
                           obscureText: true,
@@ -135,22 +134,29 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () async {
-                              if(_emailController.text == ''){
-                            AwesomeDialog(context: context,
-                             dialogType: DialogType.error,
-                             animType: AnimType.rightSlide,
-                             title: 'error',desc: 'يرجاء التاكد من الجميل ').show();
-
+                              if (_emailController.text == '') {
+                                AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.rightSlide,
+                                        title: 'error',
+                                        desc: 'يرجاء التاكد من الجميل ')
+                                    .show();
                               }
-                              try{
-                              await FirebaseAuth.instance.sendPasswordResetEmail(email:_emailController.text);
-                              AwesomeDialog(context: context,
-                             dialogType: DialogType.error,
-                             animType: AnimType.rightSlide,
-                             title: 'error',desc: 'يرجاء التاكد من الجميل ').show();
-                              }catch(e){
+                              try {
+                                await FirebaseAuth.instance
+                                    .sendPasswordResetEmail(
+                                        email: _emailController.text);
+                                AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.rightSlide,
+                                        title: 'error',
+                                        desc: 'يرجاء التاكد من الجميل ')
+                                    .show();
+                              } catch (e) {
                                 print(e);
-                              }                             
+                              }
                             },
                             child: const Text(
                               'Forget password?',
@@ -167,8 +173,14 @@ class _LoginPageState extends State<LoginPage> {
                           innerText: 'Login',
                           onPressed: login,
                         ),
-                         const SizedBox(height: 20),
-                        CustomFormButton(innerText: "Login with google",onPressed:(){signInWithGoogle();},Image:Image.asset('images/pngwing.com.png') ,),
+                        const SizedBox(height: 20),
+                        CustomFormButton(
+                          innerText: "Login with google",
+                          onPressed: () {
+                            signInWithGoogle();
+                          },
+                          Image: Image.asset('images/pngwing.com.png'),
+                        ),
                         const SizedBox(height: 18),
                         SizedBox(
                           width: size.width * 0.8,
@@ -188,8 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignupPage(),
+                                      builder: (context) => const SignupPage(),
                                     ),
                                   );
                                 },

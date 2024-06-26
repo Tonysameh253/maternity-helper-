@@ -1,25 +1,24 @@
 // ignore_for_file: sort_child_properties_last, duplicate_ignore, prefer_const_constructors, avoid_print, unused_import, prefer_typing_uninitialized_variables, dead_code, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:maternityhelperap/screen/AppointTracker.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:maternityhelperap/screen/food.dart';
-import 'package:maternityhelperap/screen/Exercise and  wellness.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:maternityhelperap/commuinty/chat_screen.dart';
-import 'package:maternityhelperap/screen/camera.dart';
-import 'package:maternityhelperap/screen/profile.dart';
-import 'package:maternityhelperap/screen/imagepaker.dart';
+import 'package:maternityhelperap/screen/AppointTracker.dart';
+import 'package:maternityhelperap/screen/Exercise and  wellness.dart';
 import 'package:maternityhelperap/screen/cale.dart';
-import 'package:maternityhelperap/screen/doctor.dart';
+import 'package:maternityhelperap/screen/camera.dart';
 import 'package:maternityhelperap/screen/camerrra.dart';
-
+import 'package:maternityhelperap/screen/doctor.dart';
+import 'package:maternityhelperap/screen/food.dart';
+import 'package:maternityhelperap/screen/imagepaker.dart';
+import 'package:maternityhelperap/screen/profile.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 // ignore: depend_on_referenced_packages, unused_import
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, this.title = 'Home'});
   final String title;
   @override
   // ignore: library_private_types_in_public_api
@@ -43,14 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-       child: Container(
+      child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('images/love this maternity photo.jpeg'),
             fit: BoxFit.cover,
           ),
         ),
-      child: Scaffold(
+        child: Scaffold(
           backgroundColor: const Color(0xFFdbd7d2),
           appBar: AppBar(
             shape: const RoundedRectangleBorder(
@@ -108,11 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   leading: Icon(Icons.logout_outlined),
                   title: const Text('Login Out'),
                   selected: _selectedIndex == 2,
-                  onTap: () async{
-                    GoogleSignIn googleSignIn=GoogleSignIn();
+                  onTap: () async {
+                    GoogleSignIn googleSignIn = GoogleSignIn();
                     googleSignIn.disconnect();
                     await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil("Login", (route)=>false);}, 
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil("Login", (route) => false);
+                  },
                 ),
               ],
             ),
@@ -122,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Center(
               child: Column(
                 children: [
-  
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -166,9 +166,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                     Navigator.push(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) =>DoctorListPage()),
+                        MaterialPageRoute(
+                            builder: (context) => DoctorListPage()),
                       );
                     },
                     child: Card(
@@ -184,7 +185,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               decoration: const BoxDecoration(
                                 image: DecorationImage(
                                   alignment: Alignment.centerLeft,
-                                  image: AssetImage('images/doctors-office.gif'),
+                                  image:
+                                      AssetImage('images/doctors-office.gif'),
                                 ),
                               ),
                               height: 100,
@@ -206,47 +208,49 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   GestureDetector(
-                onTap: () {
-                  // Add your logic here for what happens when the card is pressed
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CalendarPagee()),
-                  );
-                },
-                child: Card(
-                  shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  margin: const EdgeInsets.all(30.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              alignment: Alignment.centerLeft,
-                              image: AssetImage('images/ultrasound (1).gif'),
+                    onTap: () {
+                      // Add your logic here for what happens when the card is pressed
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CalendarPagee()),
+                      );
+                    },
+                    child: Card(
+                      shape: BeveledRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      margin: const EdgeInsets.all(30.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  alignment: Alignment.centerLeft,
+                                  image:
+                                      AssetImage('images/ultrasound (1).gif'),
+                                ),
+                              ),
+                              height: 100,
+                              width: 150,
                             ),
-                          ),
-                          height: 100,
-                          width: 150,
-                        ),
-                        const SizedBox(),
-                        Expanded(
-                          child: Text(
-                            'Ultrasound Scans',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(),
+                            Expanded(
+                              child: Text(
+                                'Ultrasound Scans',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
                 ],
               ),
             ),
@@ -297,10 +301,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 labelStyle: const TextStyle(fontSize: 18.0),
                 // ignore: avoid_print
                 onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ImagePickerExample()),
-                      ),
+                  context,
+                  MaterialPageRoute(builder: (context) => ImagePickerExample()),
+                ),
                 onLongPress: () => print('SECOND CHILD LONG PRESS'),
               ),
             ],
@@ -315,7 +318,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyHomePage(title: "")),
+                    MaterialPageRoute(
+                        builder: (context) => MyHomePage(title: "")),
                   );
                   break;
                 case 1:
@@ -334,7 +338,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Exercise(title: "")),
+                    MaterialPageRoute(
+                        builder: (context) => Exercise(title: "")),
                   );
                   break;
                 default:
@@ -362,6 +367,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-    ),);
+      ),
+    );
   }
 }
