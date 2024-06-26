@@ -14,7 +14,7 @@ import 'package:maternityhelperap/screen/food.dart';
 import 'package:maternityhelperap/screen/imagepaker.dart';
 import 'package:maternityhelperap/screen/profile.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-
+import 'package:maternityhelperap/src/models/code.dart';
 // ignore: depend_on_referenced_packages, unused_import
 
 class MyHomePage extends StatefulWidget {
@@ -302,7 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 // ignore: avoid_print
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ImagePickerExample()),
+                  MaterialPageRoute(builder: (context) =>HomePage()),
                 ),
                 onLongPress: () => print('SECOND CHILD LONG PRESS'),
               ),

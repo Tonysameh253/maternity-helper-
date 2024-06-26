@@ -18,7 +18,7 @@ import 'package:maternityhelperap/screen/home.dart';
 import 'package:maternityhelperap/screen/imagepaker.dart';
 import 'package:maternityhelperap/screen/intro_slider_screen.dart';
 import 'package:maternityhelperap/screen/splashscreen.dart';
-
+import 'package:maternityhelperap/src/models/code.dart';
 import 'firebase_options.dart';
 
 String userId = '';
@@ -44,7 +44,7 @@ void main() async {
   );
   testFirestore();
   runApp(
-    const MaterialApp(home: LoginPage()),
+    const MaterialApp(home:LoginPage()),
   );
 }
 
