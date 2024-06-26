@@ -25,7 +25,7 @@ await Firebase.initializeApp(
 );
   
   runApp(
-    const MaterialApp(home:LoginPage()),
+    const MaterialApp(home:ObjectDetectionScreen()),
   );
 }
 class MYAPP extends StatefulWidget {
@@ -53,13 +53,13 @@ class _MYAPPState extends State<MYAPP> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     debugShowCheckedModeBanner: false,
+    /* debugShowCheckedModeBanner: false,
       home: (FirebaseAuth.instance.currentUser==null && FirebaseAuth.instance.currentUser!.emailVerified) ? MyHomePage(title: "") : LoginPage(),
       routes:{ "LOGIN": (context) => LoginPage(),
       "SignUp": (context) => SignupPage(),
       "Home": (context) => MyHomePage(title: "home"),
       
-      },
+      },*/
       
     );
   }
