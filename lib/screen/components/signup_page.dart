@@ -2,19 +2,20 @@
 // ignore_for_file: unused_local_variable, unused_field, non_constant_identifier_names, use_build_context_synchronously, avoid_print
 
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:maternityhelperap/screen/components/common/custom_form_button.dart';
+import 'package:maternityhelperap/screen/components/common/custom_input_field.dart';
 import 'package:maternityhelperap/screen/components/common/page_header.dart';
 import 'package:maternityhelperap/screen/components/common/page_heading.dart';
 import 'package:maternityhelperap/screen/components/login_page.dart';
-import 'package:maternityhelperap/screen/components/common/custom_form_button.dart';
-import 'package:maternityhelperap/screen/components/common/custom_input_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:maternityhelperap/screen/profile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
@@ -30,27 +31,22 @@ class _SignupPageState extends State<SignupPage> {
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
   final _nameController = TextEditingController();
-  GlobalKey<FormState>formState =GlobalKey<FormState>();
-  
-  
-  
+  GlobalKey<FormState> formState = GlobalKey<FormState>();
+
   Future SignUP() async {
     if (passwordConfirmed()) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
-
-        );
-      
+      );
     }
-
   }
 
   Future<void> _register() async {
     try {
       // Create user with email and password
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-
+      // UserCredential userCredential =
+      var userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -59,13 +55,17 @@ class _SignupPageState extends State<SignupPage> {
       // Upload image to Firebase Storage
       String imageUrl = '';
       if (_profileImage != null) {
-        Reference ref = _storage.ref().child('user_images').child('${userCredential.user!.uid}.jpg');
+        Reference ref = _storage
+            .ref()
+            .child('user_images')
+            .child('${userCredential.user!.uid}.jpg');
         UploadTask uploadTask = ref.putFile(_profileImage!);
         TaskSnapshot taskSnapshot = await uploadTask;
         imageUrl = await taskSnapshot.ref.getDownloadURL();
       }
 
       // Save user info to Firestore
+
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'email': _emailController.text.trim(),
         'name': _nameController.text.trim(),
@@ -76,16 +76,18 @@ class _SignupPageState extends State<SignupPage> {
       print('User registered successfully!');
     } catch (e) {
       print('Error: $e');
-}
-}
-  bool passwordConfirmed(){
-    if (_passwordController.text.trim()==_confirmpasswordController.text.trim()){
-      return true;
-    } else{
-      return false;
-
-}
+    }
   }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confirmpasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   File? _profileImage;
 
   Future _pickProfileImage() async {
@@ -101,12 +103,13 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   @override
-    void dispose(){
+  void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmpasswordController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -170,7 +173,7 @@ class _SignupPageState extends State<SignupPage> {
                         height: 16,
                       ),
                       CustomInputField(
-                          Controller: _nameController,
+                          controller: _nameController,
                           labelText: 'Name',
                           hintText: 'Your name',
                           isDense: true,
@@ -184,7 +187,7 @@ class _SignupPageState extends State<SignupPage> {
                         height: 16,
                       ),
                       CustomInputField(
-                          Controller: _emailController,
+                          controller: _emailController,
                           labelText: 'Email',
                           hintText: 'Your email id',
                           isDense: true,
@@ -201,7 +204,7 @@ class _SignupPageState extends State<SignupPage> {
                         height: 16,
                       ),
                       CustomInputField(
-                        Controller: _passwordController,
+                        controller: _passwordController,
                         labelText: 'Password',
                         hintText: 'Your password',
                         isDense: true,
@@ -218,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
                         height: 16,
                       ),
                       CustomInputField(
-                        Controller: _confirmpasswordController,
+                        controller: _confirmpasswordController,
                         labelText: 'Confirm Password',
                         hintText: 'Your Confirm password',
                         isDense: true,
@@ -288,7 +291,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void _handleSignupUser() async {
     // signup user
-   /*try {
+    /*try {
   final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
     email: _emailController.text,
     password: _passwordController.text,
@@ -303,6 +306,6 @@ class _SignupPageState extends State<SignupPage> {
     print('Wrong password provided for that user.');
   }
 }*/
-await _register();
+    await _register();
   }
 }
