@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "57334423024",
+    "project_id": "maternity-helper-app",
+    "storage_bucket": "maternity-helper-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57334423024:android:b334b12c2ca6010a695135",
+        "android_client_info": {
+          "package_name": "com.example.maternityhelperap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvJ_P4mtC_ClDDFMNGG6wsxwOz_Dykv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57334423024:android:fd83834df33afab8695135",
+        "android_client_info": {
+          "package_name": "com.example.maternityhelperap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvJ_P4mtC_ClDDFMNGG6wsxwOz_Dykv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
