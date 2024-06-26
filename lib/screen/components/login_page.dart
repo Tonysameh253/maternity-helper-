@@ -5,11 +5,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:maternityhelperap/main.dart';
 import 'package:maternityhelperap/screen/components/common/custom_form_button.dart';
 import 'package:maternityhelperap/screen/components/common/custom_input_field.dart';
 import 'package:maternityhelperap/screen/components/common/page_header.dart';
 import 'package:maternityhelperap/screen/components/common/page_heading.dart';
 import 'package:maternityhelperap/screen/components/signup_page.dart';
+import 'package:maternityhelperap/screen/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -47,13 +49,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> login() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      userId = userCredential.user!.uid;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login successful!')),
       );
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          (route) => false);
     } on FirebaseAuthException catch (e) {
       String message;
       if (e.code == 'user-not-found') {

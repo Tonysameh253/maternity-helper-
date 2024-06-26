@@ -77,6 +77,9 @@ class _SignupPageState extends State<SignupPage> {
 
       // Navigate to home screen or show success message
       print('User registered successfully!');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Register successful!')),
+      );
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const MyHomePage()),
           (route) => false);
