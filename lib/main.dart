@@ -21,6 +21,7 @@ import 'package:maternityhelperap/screen/splashscreen.dart';
 
 import 'firebase_options.dart';
 
+String userId = '';
 void testFirestore() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 

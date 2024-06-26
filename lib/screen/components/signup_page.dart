@@ -10,11 +10,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:maternityhelperap/main.dart';
 import 'package:maternityhelperap/screen/components/common/custom_form_button.dart';
 import 'package:maternityhelperap/screen/components/common/custom_input_field.dart';
 import 'package:maternityhelperap/screen/components/common/page_header.dart';
 import 'package:maternityhelperap/screen/components/common/page_heading.dart';
 import 'package:maternityhelperap/screen/components/login_page.dart';
+import 'package:maternityhelperap/screen/home.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -51,7 +53,7 @@ class _SignupPageState extends State<SignupPage> {
         password: _passwordController.text.trim(),
       );
       print(userCredential.user!.uid);
-
+      userId = userCredential.user!.uid;
       // Upload image to Firebase Storage
       String imageUrl = '';
       if (_profileImage != null) {
@@ -70,10 +72,14 @@ class _SignupPageState extends State<SignupPage> {
         'email': _emailController.text.trim(),
         'name': _nameController.text.trim(),
         'imageUrl': imageUrl,
+        'id': userCredential.user!.uid,
       });
 
       // Navigate to home screen or show success message
       print('User registered successfully!');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          (route) => false);
     } catch (e) {
       print('Error: $e');
     }
