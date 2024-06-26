@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maternityhelperap/screen/AppointTracker.dart';
 import 'package:maternityhelperap/screen/camera.dart';
+import 'package:maternityhelperap/screen/imagepaker.dart';
 import 'package:maternityhelperap/screen/intro_slider_screen.dart';
 import 'package:maternityhelperap/screen/splashscreen.dart';
 import 'package:maternityhelperap/screen/home.dart';
@@ -24,7 +25,7 @@ await Firebase.initializeApp(
 );
   
   runApp(
-    const MaterialApp(home:MyHomePage(title: "")),
+    const MaterialApp(home:LoginPage()),
   );
 }
 class MYAPP extends StatefulWidget {
@@ -52,13 +53,13 @@ class _MYAPPState extends State<MYAPP> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-    /* debugShowCheckedModeBanner: false,
+     debugShowCheckedModeBanner: false,
       home: (FirebaseAuth.instance.currentUser==null && FirebaseAuth.instance.currentUser!.emailVerified) ? MyHomePage(title: "") : LoginPage(),
       routes:{ "LOGIN": (context) => LoginPage(),
       "SignUp": (context) => SignupPage(),
       "Home": (context) => MyHomePage(title: "home"),
       
-      },*/
+      },
       
     );
   }

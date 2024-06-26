@@ -13,6 +13,8 @@ import 'package:maternityhelperap/screen/components/common/custom_form_button.da
 import 'package:maternityhelperap/screen/components/common/custom_input_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:maternityhelperap/screen/profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
@@ -21,7 +23,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
@@ -41,6 +45,39 @@ class _SignupPageState extends State<SignupPage> {
     }
 
   }
+
+  Future<void> _register() async {
+    try {
+      // Create user with email and password
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      print(userCredential.user!.uid);
+
+      // Upload image to Firebase Storage
+      String imageUrl = '';
+      if (_profileImage != null) {
+        Reference ref = _storage.ref().child('user_images').child('${userCredential.user!.uid}.jpg');
+        UploadTask uploadTask = ref.putFile(_profileImage!);
+        TaskSnapshot taskSnapshot = await uploadTask;
+        imageUrl = await taskSnapshot.ref.getDownloadURL();
+      }
+
+      // Save user info to Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': _emailController.text.trim(),
+        'name': _nameController.text.trim(),
+        'imageUrl': imageUrl,
+      });
+
+      // Navigate to home screen or show success message
+      print('User registered successfully!');
+    } catch (e) {
+      print('Error: $e');
+}
+}
   bool passwordConfirmed(){
     if (_passwordController.text.trim()==_confirmpasswordController.text.trim()){
       return true;
@@ -251,7 +288,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void _handleSignupUser() async {
     // signup user
-   try {
+   /*try {
   final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
     email: _emailController.text,
     password: _passwordController.text,
@@ -265,6 +302,7 @@ class _SignupPageState extends State<SignupPage> {
   } else if (e.code == 'wrong-password') {
     print('Wrong password provided for that user.');
   }
-}
+}*/
+await _register();
   }
 }

@@ -2,9 +2,14 @@
 
 library flutter_camera;
 
+import 'dart:io';
+
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tflite_v2/tflite_v2.dart';
 
 class FlutterCamera extends StatefulWidget {
   final Color? color;
@@ -40,15 +45,56 @@ class _FlutterCameraState extends State<FlutterCamera> {
     }
     return true;
   }
+  final ImagePicker _picker = ImagePicker();
+   XFile? _image;
+   File? file;
+   var _recognitions;
+   var v = "";
 
   @override
   void initState() {
     HardwareKeyboard.instance.addHandler(volumeControl);
     super.initState();
+    loadmodel().then((value) {
+     setState(() {});
+    });
     initCamera().then((_) {
       ///initialize camera and choose the back camera as the initial camera in use.
       setCamera(0);
     });
+  }
+    loadmodel() async {
+    await Tflite.loadModel(
+      model: "asset/Dataset_Plane.tflite",
+      labels: "asset/labels.txt",
+    );
+  }
+    Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        _image = image;
+        file = File(image!.path);
+      });
+      detectimage(file!);
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
+   Future detectimage(File image) async {
+    var recognitions = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 6,
+      threshold: 0.05,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    setState(() {
+      _recognitions = recognitions;
+      v = recognitions.toString();
+      // dataList = List<Map<String, dynamic>>.from(jsonDecode(v));
+    });
+    print(_recognitions);
   }
 
   /// calls [availableCameras()] which returns a list<CameraDescription>.
@@ -75,6 +121,7 @@ class _FlutterCameraState extends State<FlutterCamera> {
     super.dispose();
   }
 
+
   bool _isTouchOn = false;
   bool _isFrontCamera = false;
 
@@ -88,11 +135,11 @@ class _FlutterCameraState extends State<FlutterCamera> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: widget.color,
+        backgroundColor:Colors.white,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color:Colors.white,
+            color:Color.fromARGB(255, 255, 255, 255),
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -361,7 +408,7 @@ class _FlutterCameraState extends State<FlutterCamera> {
   Widget captureImageButton() {
     return IconButton(
       onPressed: () {
-        captureImage();
+        _pickImage();
       },
       icon: Icon(
         Icons.camera,
@@ -369,5 +416,11 @@ class _FlutterCameraState extends State<FlutterCamera> {
         size: 50,
       ),
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('_recognitions', _recognitions));
+    properties.add(DiagnosticsProperty<XFile?>('_image', _image));
   }
 }
